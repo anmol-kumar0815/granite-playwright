@@ -1,12 +1,15 @@
 import { test, expect } from "@playwright/test";
+import { faker } from "@faker-js/faker";
+import LoginPage from "../poms/login";
 
 test.describe("Login page", () => {
   test("should login with the correct credentials", async ({ page }) => {
+    const email = "oliver@example.com";
+    const username = "Oliver Smith";
+    const password = "welcome";
+    const login = new LoginPage(page);
+
     await page.goto("http://localhost:3000");
-    await page.getByTestId("login-email-field").fill("oliver@example.com");
-    await page.getByTestId("login-password-field").fill("welcome");
-    await page.getByTestId("login-submit-button").click();
-    await expect(page.getByTestId("navbar-username-label")).toBeVisible();
-    await expect(page.getByTestId("navbar-logout-link")).toBeVisible();
+    await login.loginAndVerifyUser({ email, username, password });
   });
 });
