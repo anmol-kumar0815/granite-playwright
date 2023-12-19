@@ -1,13 +1,11 @@
-import { test, expect } from "@playwright/test";
+import { test } from "../fixtures";
 import { faker } from "@faker-js/faker";
-import LoginPage from "../poms/login";
 
 test.describe("Register page", () => {
-  test("should register a user", async ({ page }) => {
+  test("should register a user", async ({ page, loginPage }) => {
     const newUserName = faker.person.fullName();
     const newUserEmail = faker.internet.email();
     const newUserPassword = faker.internet.password();
-    const login = new LoginPage(page);
 
     await page.goto("http://localhost:3000");
     await page.getByTestId("login-register-link").click();
@@ -17,6 +15,6 @@ test.describe("Register page", () => {
     await page.getByTestId("signup-password-confirmation-field").fill(newUserPassword);
     await page.getByTestId("signup-submit-button").click();
 
-    await login.loginAndVerifyUser({ email: newUserEmail, password: newUserPassword, username: newUserName });
+    await loginPage.loginAndVerifyUser({ email: newUserEmail, password: newUserPassword, username: newUserName });
   });
 });
