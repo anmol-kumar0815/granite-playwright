@@ -1,4 +1,5 @@
 import { test } from "../fixtures";
+import { STORAGE_STATE } from "../../playwright.config";
 
 test.describe("Login page", () => {
   test("should login with the correct credentials", async ({ page, loginPage }) => {
@@ -6,7 +7,8 @@ test.describe("Login page", () => {
     const username = "Oliver Smith";
     const password = "welcome";
 
-    await page.goto("http://localhost:3000");
+    await page.goto("/");
     await loginPage.loginAndVerifyUser({ email, username, password });
+    await page.context().storageState({ path: STORAGE_STATE });
   });
 });
