@@ -67,6 +67,55 @@ test.describe("Todo details page", () => {
         .getByRole("cell", { name: new RegExp(newTodo, "i") })
         .click();
       await expect(newUserPage.getByTestId("task-comment-content")).toHaveText(commentByCreator);
+      await newUserPage.close();
+      await newUserContext.close();
+    });
+  });
+
+  test("should be able to add a new comment as an assignee of a task", async ({ browser, page, todoPage }) => {
+    await test.step("Step 1: Navigate to home page", async () => {
+      await page.goto("/");
+    });
+
+    await test.step("Step 2: Create a todo and verify it", async () => {
+      await todoPage.createTodoAndVerify({ newTodo, userName: "Sam Smith" });
+    });
+
+    await test.step("Step 3: Login as the assignee and add comment", async () => {
+      const newUserContext = await browser.newContext({
+        storageState: { cookies: [], origins: [] },
+      });
+      const newUserPage = await newUserContext.newPage();
+      const loginPage = new LoginPage(newUserPage);
+      const newUserTodoPage = new TodoPage(newUserPage);
+
+      await newUserPage.goto("/");
+      await loginPage.loginAndVerifyUser({
+        email: "sam@example.com",
+        password: "welcome",
+        username: "Sam Smith",
+      });
+
+      await newUserPage.getByTestId("tasks-pending-table")
+        .getByRole("row", { name: new RegExp(newTodo, "i") })
+        .getByRole("cell", { name: new RegExp(newTodo, "i") })
+        .click();
+      await newUserTodoPage.addCommentAndVerifyIt({ comment: commentByAssignee });
+      await newUserPage.getByTestId("navbar-todos-page-link").click();
+      await newUserTodoPage.verifyCommentCount({ todoName: newTodo, commentCount: "1" });
+      await newUserPage.close();
+      await newUserContext.close();
+    });
+
+    await test.step("Step 4: Verify comment as a creator of the todo", async () => {
+      await page.reload();
+      await todoPage.verifyCommentCount({ todoName: newTodo, commentCount: "1" });
+      await page.getByTestId("tasks-pending-table")
+        .getByRole("row", { name: new RegExp(newTodo, "i") })
+        .getByRole("cell", { name: new RegExp(newTodo, "i") })
+        .click();
+      await expect(page.getByTestId("task-comment-content").first()).toHaveText(commentByAssignee);
+      await page.getByTestId("navbar-todos-page-link").click();
     });
   });
 });
