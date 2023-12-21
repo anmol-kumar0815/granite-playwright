@@ -76,10 +76,12 @@ const Show = () => {
         <div className="mt-2 mb-4 rounded bg-bb-env px-2">
           <i
             className="ri-delete-bin-5-line mr-2 cursor-pointer text-center text-2xl transition duration-300 ease-in-out hover:text-bb-red"
+            data-testid="task-delete-button"
             onClick={destroyTask}
           />
           <i
             className="ri-edit-line cursor-pointer text-center text-2xl transition duration-300 ease-in-out hover:text-bb-yellow"
+            data-testid="task-edit-button"
             onClick={updateTask}
           />
         </div>

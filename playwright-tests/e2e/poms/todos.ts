@@ -8,6 +8,14 @@ interface CreateNewTodoProps extends TodoName {
   userName?: string;
 }
 
+interface AddCommentProps {
+  comment: string;
+}
+
+interface VerifyCommentCountProps extends TodoName {
+  commentCount: string;
+}
+
 export class TodoPage {
   page: Page;
 
@@ -53,5 +61,24 @@ export class TodoPage {
     await expect(
       this.page.getByTestId("tasks-pending-table").getByRole("row").nth(1)
     ).toContainText(newTodo);
+  };
+
+  addCommentAndVerify = async ({ comment }: AddCommentProps) => {
+    await this.page.getByTestId("comments-text-field").fill(comment);
+    await this.page.getByTestId("comments-submit-button").click();
+    await expect(this.page.getByTestId("task-comment-content").first()).toHaveText(comment);
+  };
+
+  verifyCommentCount = async ({ todoName, commentCount }: VerifyCommentCountProps) => {
+    await expect(this.page.getByTestId("tasks-pending-table")
+      .getByRole("row", { name: new RegExp(todoName, "i") })
+      .getByRole("cell", { name: commentCount })).toBeVisible();
+  };
+
+  deleteTodoAndVerify = async ({ todoName }: TodoName) => {
+    await this.page.getByTestId("task-delete-button").click();
+    await expect(this.page.getByTestId("tasks-pending-table")
+      .getByRole("row", { name: new RegExp(todoName, "i") }))
+      .toBeHidden();
   };
 }
