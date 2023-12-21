@@ -63,7 +63,7 @@ export class TodoPage {
     ).toContainText(newTodo);
   };
 
-  addCommentAndVerifyIt = async ({ comment }: AddCommentProps) => {
+  addCommentAndVerify = async ({ comment }: AddCommentProps) => {
     await this.page.getByTestId("comments-text-field").fill(comment);
     await this.page.getByTestId("comments-submit-button").click();
     await expect(this.page.getByTestId("task-comment-content").first()).toHaveText(comment);
@@ -75,7 +75,7 @@ export class TodoPage {
       .getByRole("cell", { name: commentCount })).toBeVisible();
   };
 
-  deleteTodoAndVerifyIt = async ({ todoName }: TodoName) => {
+  deleteTodoAndVerify = async ({ todoName }: TodoName) => {
     await this.page.getByTestId("task-delete-button").click();
     await expect(this.page.getByTestId("tasks-pending-table")
       .getByRole("row", { name: new RegExp(todoName, "i") }))

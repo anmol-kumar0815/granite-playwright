@@ -20,7 +20,7 @@ test.describe("Todo details page", () => {
       .getByRole("row", { name: new RegExp(newTodo, "i") })
       .getByRole("cell", { name: new RegExp(newTodo, "i") })
       .click();
-    await todoPage.deleteTodoAndVerifyIt({ todoName: newTodo });
+    await todoPage.deleteTodoAndVerify({ todoName: newTodo });
   });
 
   test("should be able to add a new comment as a creator of a task", async ({ browser, page, todoPage }) => {
@@ -38,7 +38,7 @@ test.describe("Todo details page", () => {
         .getByRole("cell", { name: new RegExp(newTodo, "i") })
         .click();
 
-      await todoPage.addCommentAndVerifyIt({ comment: commentByCreator });
+      await todoPage.addCommentAndVerify({ comment: commentByCreator });
     });
 
     await test.step("Step 4: Navigate to todo page and verify comment count", async () => {
@@ -100,7 +100,7 @@ test.describe("Todo details page", () => {
         .getByRole("row", { name: new RegExp(newTodo, "i") })
         .getByRole("cell", { name: new RegExp(newTodo, "i") })
         .click();
-      await newUserTodoPage.addCommentAndVerifyIt({ comment: commentByAssignee });
+      await newUserTodoPage.addCommentAndVerify({ comment: commentByAssignee });
       await newUserPage.getByTestId("navbar-todos-page-link").click();
       await newUserTodoPage.verifyCommentCount({ todoName: newTodo, commentCount: "1" });
       await newUserPage.close();
